@@ -1,14 +1,16 @@
-// const uuid = 
+const pg = require("pg");
+const uuid = require("uuid");
+require("dotenv");
 
 const client = new pg.Client(
-  process.env.DATABASE_URL || "postgres://localhost/acme_travel_db"
+  process.env.DATABASE_URL || "postgres://localhost/workshop_block34"
 );
 
 async function createTables() {
   const SQL = `
-      DROP TABLE IF EXISTS customer
-      DROP TABLE IF EXISTS restaurant
-      DROP TABLE IF EXISTS reservation
+      DROP TABLE IF EXISTS customers
+      DROP TABLE IF EXISTS restaurants
+      DROP TABLE IF EXISTS reservations
 
       CREATE TABLE customers(
         id UUID PRIMARY KEY
@@ -34,14 +36,14 @@ async function createTables() {
 
 async function createCustomer(name) {
   const SQL = `INSERT INTO customers(id, name) VALUES($1, $2) RETURNING *`;
-  const dbResponse = await client.query(SQL, [randomUUID.v4(), name]);
-  return dbResponse;
+  const dbResponse = await client.query(SQL, [uuid.v4(), name]);
+  return dbResponse.rows[0];
 }
 
 async function createRestaurant(name) {
   const SQL = `INSERT INTO restaurants(id, name) VALUES($1, $2) RETURNING *`;
-  const dbResponse = await client.query(SQL, [randomUUID.v4(), name]);
-  return dbResponse;
+  const dbResponse = await client.query(SQL, [uuid.v4(), name]);
+  return dbResponse.rows[0];
 }
 
 async function fetchCustomers() {
@@ -56,12 +58,22 @@ async function fetchRestaurants() {
   return dbResponse.rows;
 }
 
-async function createReservation() {
-
+async function createReservation(restaurant_id, date, party_count) {
+  const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id, customer_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
+  const dbResponse = await client.query(SQL, [
+    uuid.v4(),
+    id,
+    date,
+    party_count,
+    restaurant_id,
+    customer_id,
+  ]);
+  return dbResponse.rows[0];
 }
 
-async function destroyReservation() {
-
+async function destroyReservation(id, customer_id) {
+  const SQL = `DELETE FROM reservations WHERE id=$1 AND customer_id=$2`;
+  await client.query(SQL, [id, customer_id]);
 }
 
 module.exports = {
@@ -71,4 +83,6 @@ module.exports = {
   createRestaurant,
   fetchCustomers,
   fetchRestaurants,
+  createReservation,
+  destroyReservation,
 };
