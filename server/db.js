@@ -58,6 +58,12 @@ async function fetchRestaurants() {
   return dbResponse.rows;
 }
 
+async function fetchReservations() {
+  const SQL = `SELECT * FROM reservations;`;
+  const dbResponse = await client.query(SQL);
+  return dbResponse.rows;
+}
+
 async function createReservation(restaurant_id, date, party_count) {
   const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id, customer_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
   const dbResponse = await client.query(SQL, [
@@ -83,6 +89,7 @@ module.exports = {
   createRestaurant,
   fetchCustomers,
   fetchRestaurants,
+  fetchReservations,
   createReservation,
   destroyReservation,
 };

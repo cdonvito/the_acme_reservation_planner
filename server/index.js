@@ -5,6 +5,7 @@ const {
   createRestaurant,
   fetchCustomers,
   fetchRestaurants,
+  fetchReservations,
   createReservation,
   destroyReservation,
 } = require("./db");
@@ -24,6 +25,7 @@ server.use(express.json());
 server.get("/api/customers", async (req, res, next) => {
   try {
     const customers = await fetchCustomers();
+    res.send(customers);
   } catch (error) {
     next(error);
   }
@@ -31,7 +33,8 @@ server.get("/api/customers", async (req, res, next) => {
 
 server.get("/api/restaurants", async (req, res, next) => {
   try {
-    const customers = await fetchCustomers();
+    const restaurants = await fetchRestaurants();
+    res.send(restaurants);
   } catch (error) {
     next(error);
   }
@@ -39,7 +42,8 @@ server.get("/api/restaurants", async (req, res, next) => {
 
 server.get("/api/reservations", async (req, res, next) => {
   try {
-    const customers = await fetchCustomers();
+    const reservations = await fetchReservations();
+    res.send(reservations);
   } catch (error) {
     next(error);
   }
@@ -47,7 +51,12 @@ server.get("/api/reservations", async (req, res, next) => {
 
 server.post("/api/customers/:id/reservations", async (req, res, next) => {
   try {
-    const customers = await fetchCustomers();
+    const reservation = await createReservation({
+      restaurant_id: req.params.id,
+      date: req.body.date,
+      party_count: req.body.party_count,
+    });
+    res.send(reservation);
   } catch (error) {
     next(error);
   }
