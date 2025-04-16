@@ -20,6 +20,10 @@
   },
   "homepage": "https://github.com/cdonvito/the_acme_reservation_planner#readme",
   "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.14.1",
     "uuid": "^11.1.0"
   }
 }

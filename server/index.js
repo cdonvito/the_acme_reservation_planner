@@ -66,7 +66,8 @@ server.delete(
   "/api/customers/:customer_id/reservations/:id",
   async (req, res, next) => {
     try {
-      const customers = await fetchCustomers();
+      await destroyReservation(req.params.id, req.params.customer_id);
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }

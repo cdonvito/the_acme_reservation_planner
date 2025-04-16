@@ -17,39 +17,40 @@ async function init() {
   createTables();
   console.log("tables created");
 
-  const [Craig, Madie, Scooby, KFC, Pizza_Hut, Taco_Bell, Subway] =
+  const [craig, madie, scooby, outback, red_Robin, cheddars, carrabbas] =
     await Promise.all([
       createCustomer("Craig"),
       createCustomer("Madie"),
       createCustomer("Scooby"),
-      createRestaurant("KFC"),
-      createRestaurant("Pizza_Hut"),
-      createRestaurant("Taco_Bell"),
-      createRestaurant("Subway"),
+      createRestaurant("Outback Steakhouse"),
+      createRestaurant("Red Robin"),
+      createRestaurant("Cheddar's"),
+      createRestaurant("Carrabba's"),
     ]);
   console.log("users and restaurants created");
 
   console.log(await fetchCustomers());
   console.log(await fetchRestaurants());
 
-  const [res1, res2] = await Promise.all([
+  const [res1] = await Promise.all([
     createReservation({
       date: "4/16/2025",
       party_count: 4,
-      restaurant_id: KFC.id,
-      customer_id: Craig.id,
+      restaurant_id: outback.id,
+      customer_id: craig.id,
     }),
     createReservation({
       date: "4/21/2025",
       party_count: 6,
-      restaurant_id: Subway.id,
-      customer_id: Madie.id,
+      restaurant_id: red_Robin.id,
+      customer_id: madie.id,
     }),
   ]);
 
   console.log("Reservations made");
+  console.log(await fetchReservations());
 
-  await destroyReservation(res1.id.res1.id);
+  await destroyReservation(res1.id, craig.id);
   console.log("Deleted Reservation");
 }
 

@@ -8,25 +8,25 @@ const client = new pg.Client(
 
 async function createTables() {
   const SQL = `
-      DROP TABLE IF EXISTS customers
-      DROP TABLE IF EXISTS restaurants
-      DROP TABLE IF EXISTS reservations
+      DROP TABLE IF EXISTS reservations;
+      DROP TABLE IF EXISTS customers;
+      DROP TABLE IF EXISTS restaurants;
 
       CREATE TABLE customers(
-        id UUID PRIMARY KEY
+        id UUID PRIMARY KEY,
         name VARCHAR(255) NOT NULL
-      )
+      );
 
       CREATE TABLE restaurants(
-        id UUID PRIMARY KEY
+        id UUID PRIMARY KEY,
         name VARCHAR(255) NOT NULL
-      )
+      );
 
       CREATE TABLE reservations(
-        id UUID PRIMARY KEY
-        date DATE NOT NULL
-        party_count INTEGER NOT NULL
-        restaurant_id UUID REFERENCES restaurants(id) NOT NULL
+        id UUID PRIMARY KEY,
+        date DATE NOT NULL,
+        party_count INTEGER NOT NULL,
+        restaurant_id UUID REFERENCES restaurants(id) NOT NULL,
         customer_id UUID REFERENCES customers(id) NOT NULL
       );
     `;
@@ -64,20 +64,18 @@ async function fetchReservations() {
   return dbResponse.rows;
 }
 
-async function createReservation(restaurant_id, date, party_count) {
-  const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id, customer_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
+async function createReservation({restaurant_id, date, party_count}) {
+  const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id) VALUES($1, $2, $3, $4) RETURNING *`;
   const dbResponse = await client.query(SQL, [
     uuid.v4(),
-    id,
     date,
     party_count,
     restaurant_id,
-    customer_id,
   ]);
   return dbResponse.rows[0];
 }
 
-async function destroyReservation(id, customer_id) {
+async function destroyReservation({id, customer_id}) {
   const SQL = `DELETE FROM reservations WHERE id=$1 AND customer_id=$2`;
   await client.query(SQL, [id, customer_id]);
 }
