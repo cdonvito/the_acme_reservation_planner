@@ -64,13 +64,14 @@ async function fetchReservations() {
   return dbResponse.rows;
 }
 
-async function createReservation({restaurant_id, date, party_count}) {
-  const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id) VALUES($1, $2, $3, $4) RETURNING *`;
+async function createReservation({restaurant_id, customer_id, date, party_count}) {
+  const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id, customer_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
   const dbResponse = await client.query(SQL, [
     uuid.v4(),
     date,
     party_count,
     restaurant_id,
+    customer_id,
   ]);
   return dbResponse.rows[0];
 }
