@@ -55,7 +55,7 @@ server.post("/api/customers/:id/reservations", async (req, res, next) => {
       date: req.body.date,
       party_count: req.body.party_count,
       restaurant_id: req.body.restaurant_id,
-      customer_id: req.params.id
+      customer_id: req.params.id,
     });
     res.send(reservation);
   } catch (error) {
@@ -68,9 +68,9 @@ server.delete(
   async (req, res, next) => {
     try {
       await destroyReservation({
-        reservation_id: req.params.id, 
+        id: req.params.id,
         customer_id: req.params.customer_id,
-      })
+      });
       res.sendStatus(204);
     } catch (error) {
       next(error);
