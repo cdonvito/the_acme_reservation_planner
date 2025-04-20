@@ -64,7 +64,12 @@ async function fetchReservations() {
   return dbResponse.rows;
 }
 
-async function createReservation({restaurant_id, customer_id, date, party_count}) {
+async function createReservation({
+  restaurant_id,
+  customer_id,
+  date,
+  party_count,
+}) {
   const SQL = `INSERT INTO reservations(id, date, party_count, restaurant_id, customer_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
   const dbResponse = await client.query(SQL, [
     uuid.v4(),
@@ -76,7 +81,7 @@ async function createReservation({restaurant_id, customer_id, date, party_count}
   return dbResponse.rows[0];
 }
 
-async function destroyReservation({id, customer_id}) {
+async function destroyReservation({ id, customer_id }) {
   const SQL = `DELETE FROM reservations WHERE id=$1 AND customer_id=$2`;
   await client.query(SQL, [id, customer_id]);
 }

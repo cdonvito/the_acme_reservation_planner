@@ -52,9 +52,10 @@ server.get("/api/reservations", async (req, res, next) => {
 server.post("/api/customers/:id/reservations", async (req, res, next) => {
   try {
     const reservation = await createReservation({
-      restaurant_id: req.params.id,
       date: req.body.date,
       party_count: req.body.party_count,
+      restaurant_id: req.body.restaurant_id,
+      customer_id: req.params.id
     });
     res.send(reservation);
   } catch (error) {
@@ -66,7 +67,10 @@ server.delete(
   "/api/customers/:customer_id/reservations/:id",
   async (req, res, next) => {
     try {
-      await destroyReservation(req.params.id, req.params.customer_id);
+      await destroyReservation({
+        reservation_id: req.params.id, 
+        customer_id: req.params.customer_id,
+      })
       res.sendStatus(204);
     } catch (error) {
       next(error);
@@ -75,6 +79,6 @@ server.delete(
 );
 
 //error handling
-server.use((err, req, res) => {
+server.use((err, req, res, next) => {
   res.status(err.statusCode || 500).send({ error: err.message || err });
 });

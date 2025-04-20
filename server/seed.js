@@ -14,7 +14,7 @@ async function init() {
   await client.connect();
   console.log("connected to database");
 
-  createTables();
+  await createTables();
   console.log("tables created");
 
   const [craig, madie, scooby, outback, red_Robin, cheddars, carrabbas] =
@@ -50,7 +50,10 @@ async function init() {
   console.log("Reservations made");
   console.log(await fetchReservations());
 
-  await destroyReservation(res1.id, craig.id);
+  await destroyReservation({
+    id: res1.id,
+    customer_id: craig.id,
+  });
   console.log("Deleted Reservation");
 }
 
